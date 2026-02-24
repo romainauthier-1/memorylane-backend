@@ -15,7 +15,13 @@ var app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static("uploads"));
-app.use(cors());
+app.use(
+  cors({
+    origin: true, // Autorise toutes les origines
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"], // <--- INDISPENSABLE
+  }),
+);
 
 // app.use routers
 app.use("/memories", memoryRouter);

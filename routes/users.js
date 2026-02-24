@@ -60,8 +60,13 @@ router.post("/signin", async (req, res) => {
 
     // 3 - Vérification du mdp haché
     const response = await User.findOne({ username });
+    // console.log(response);
     if (response && (await bcrypt.compare(password, response.password))) {
-      res.json({ result: true, message: `Bienvenue ${username} !` });
+      res.json({
+        result: true,
+        message: `Bienvenue ${username} !`,
+        token: response.token,
+      });
     } else {
       res.json({ result: false, error: "Identifiants incorrects" });
     }
