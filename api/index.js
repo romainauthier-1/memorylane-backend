@@ -3,12 +3,12 @@ var express = require("express");
 var cors = require("cors");
 
 // connection mongoDB
-require("./models/connection");
+require("../models/connection");
 
 // routers
-const memoryRouter = require("./routes/memories");
-const uploadRouter = require("./routes/upload");
-const userRouter = require("./routes/users");
+const memoryRouter = require("../routes/memories");
+const uploadRouter = require("../routes/upload");
+const userRouter = require("../routes/users");
 
 var app = express();
 
