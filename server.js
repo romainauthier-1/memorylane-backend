@@ -12,6 +12,10 @@ const userRouter = require("./routes/users");
 
 var app = express();
 
+app.get("/", (req, res) => {
+  res.send("Le serveur des souvenirs est en ligne ! 🚀");
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static("uploads"));
@@ -30,7 +34,7 @@ app.use("/user", userRouter);
 
 module.exports = app;
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur lancé sur le port ${PORT}`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//   console.log(`🚀 Serveur lancé sur le port ${PORT}`);
+// });
