@@ -1,0 +1,17 @@
+# variables d'environnement
+.env
+
+# Dossier d'uploads de medias pour les memories
+uploads/
+
+node_modules/
+
+.DS_Store
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# vercel
+.vercel

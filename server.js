@@ -1,0 +1,30 @@
+require("dotenv").config();
+var express = require("express");
+var cors = require("cors");
+
+// connection mongoDB
+require("./models/connection");
+
+// routers
+const memoryRouter = require("./routes/memories");
+const uploadRouter = require("./routes/upload");
+const userRouter = require("./routes/users");
+
+var app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/uploads", express.static("uploads"));
+app.use(cors());
+
+// app.use routers
+app.use("/memories", memoryRouter);
+app.use("/uploads", uploadRouter);
+app.use("/user", userRouter);
+
+module.exports = app;
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Serveur lancé sur le port ${PORT}`);
+});
