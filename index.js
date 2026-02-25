@@ -1,6 +1,7 @@
 require("dotenv").config();
 var express = require("express");
 var cors = require("cors");
+const path = require("path");
 
 // connection mongoDB
 require("./models/connection");
