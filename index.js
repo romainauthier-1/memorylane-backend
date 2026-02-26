@@ -2,7 +2,7 @@ require("dotenv").config();
 var express = require("express");
 var cors = require("cors");
 const path = require("path");
-
+const fileUpload = require("express-fileupload");
 // connection mongoDB
 require("./models/connection");
 
@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(fileUpload());
 // app.use("/uploads", express.static("uploads"));
 app.use(
   cors({
@@ -36,7 +37,7 @@ app.use("/user", userRouter);
 
 module.exports = app;
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`🚀 Serveur lancé sur le port ${PORT}`);
-// });
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Serveur lancé sur le port ${PORT}`);
+});
