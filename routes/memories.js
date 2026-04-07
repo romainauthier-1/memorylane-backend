@@ -49,9 +49,6 @@ router.get("/:id", async (req, res) => {
 
 // POST One - ajouter une memory
 router.post("/", async (req, res) => {
-  console.log("--- DEBUG HEADERS ---");
-  console.log(req.headers);
-  console.log("--- FIN DEBUG ---");
   try {
     if (!req.headers.authorization) {
       res.json({ result: false, message: "Petit problème..." });
@@ -59,7 +56,7 @@ router.post("/", async (req, res) => {
     }
 
     const token = req.headers.authorization.replace("Bearer ", "").trim();
-    console.log("TOKEN REÇU: ", token);
+    // console.log("TOKEN REÇU: ", token);
     const user = await User.findOne({ token });
     if (!token) {
       res.json({ result: false, message: "Petit problème..." });
@@ -74,8 +71,8 @@ router.post("/", async (req, res) => {
       res.json({ result: false, message: "Inconnu au bataillon !" });
     }
   } catch (error) {
-    console.error(error);
-    res.json({ result: false, error });
+    console.error(error.message);
+    res.json({ result: false, error: error.message });
   }
 });
 
@@ -87,7 +84,11 @@ router.put("/:id", async (req, res) => {
       req.body,
       { new: true },
     );
-    res.json({ result: true, memory: updatedMemory });
+    res.json({
+      result: true,
+      memory: updatedMemory,
+      message: "Souvenir mis à jour avec succès !",
+    });
   } catch (error) {
     res.json({ result: false, error });
   }
@@ -98,7 +99,11 @@ router.delete("/:id", async (req, res) => {
   try {
     const foundMemory = await Memory.findById(req.params.id);
     deletedMemory = await foundMemory.deleteOne();
-    res.json({ result: true, deletedMemory: foundMemory });
+    res.json({
+      result: true,
+      deletedMemory: foundMemory,
+      message: "Souvenir supprimé !",
+    });
   } catch (error) {
     res.json({ result: false, error });
   }

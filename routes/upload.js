@@ -9,22 +9,37 @@ const os = require("os");
 // POST créer url du fichier envoyé
 router.post("/", async (req, res) => {
   // console.log("POST /upload, fichier envoyé: ", req.files?.file);
-  const extension = path.extname(req.files?.file.name);
-  const photoPath = path.join(os.tmpdir(), `${uniqid()}${extension}`);
-  // console.log("Chemin utilisé: ", photoPath);
-  const resultMove = await req.files.file.mv(photoPath);
+  // const extension = path.extname(req.files?.file.name);
+  // const photoPath = path.join(os.tmpdir(), `${uniqid()}${extension}`);
+  // console.log("Chemin utilisé: ", sourcePath);
+  // const resultMove = await req.files.file.mv(sourcePath);
+  const sourcePath = req.files.file.tempFilePath;
 
-  if (!resultMove) {
-    const resultCloudinary = await cloudinary.uploader.upload(photoPath);
+  try {
+    if (!req.files || !req.files.file) {
+      return res.json({ result: false, error: "Aucun fichier reçu" });
+    }
 
-    fileSystem.unlinkSync(photoPath);
+    const resultCloudinary = await cloudinary.uploader.upload_large(
+      sourcePath,
+      {
+        resource_type: "auto",
+        chunk_size: 6000000,
+      },
+    );
+
+    if (fileSystem.existsSync(sourcePath)) {
+      fileSystem.unlinkSync(sourcePath);
+    }
+
     res.json({
       result: true,
       url: resultCloudinary.secure_url,
       type: resultCloudinary.resource_type,
     });
-  } else {
-    res.json({ result: false, error: resultMove });
+  } catch (err) {
+    console.error("Erreur Cloudinary:", err);
+    res.json({ result: false, error: err.message });
   }
 });
 

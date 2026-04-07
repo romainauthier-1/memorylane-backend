@@ -20,7 +20,15 @@ app.get("/", (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(fileUpload());
+// app.use(fileUpload());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limite à 50 Mo
+    abortOnLimit: true,
+  }),
+);
 // app.use("/uploads", express.static("uploads"));
 app.use(
   cors({
