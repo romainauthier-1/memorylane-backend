@@ -94,6 +94,72 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// PUT Title - éditer une memory
+router.put("/title/:id", async (req, res) => {
+  const { id } = req.params;
+  const { newTitle } = req.body;
+
+  try {
+    const memory = await Memory.findById(id);
+
+    memory.title = newTitle;
+
+    const updatedMemory = await memory.save();
+
+    res.json({
+      result: true,
+      memory: updatedMemory,
+      message: "Titre mis à jour avec succès !",
+    });
+  } catch (error) {
+    res.json({ result: false, error });
+  }
+});
+
+// PUT Description - éditer une memory
+router.put("/description/:id", async (req, res) => {
+  const { id } = req.params;
+  const { newDescription } = req.body;
+
+  try {
+    const memory = await Memory.findById(id);
+
+    memory.description = newDescription;
+
+    const updatedMemory = await memory.save();
+
+    res.json({
+      result: true,
+      memory: updatedMemory,
+      message: "Description mise à jour avec succès !",
+    });
+  } catch (error) {
+    res.json({ result: false, error });
+  }
+});
+
+// PUT Caption - éditer une memory
+router.put("/caption/:id", async (req, res) => {
+  const { id } = req.params;
+  const { mediaNewCaption, mediaIndex } = req.body;
+
+  try {
+    const memory = await Memory.findById(id);
+
+    memory.medias[mediaIndex].caption = mediaNewCaption;
+
+    const updatedMemory = await memory.save();
+
+    res.json({
+      result: true,
+      memory: updatedMemory,
+      message: "Légende mis à jour avec succès !",
+    });
+  } catch (error) {
+    res.json({ result: false, error });
+  }
+});
+
 // DELETE One - supprimer une memory
 router.delete("/:id", async (req, res) => {
   try {
