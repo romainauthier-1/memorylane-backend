@@ -20,13 +20,17 @@ router.post("/", async (req, res) => {
       return res.json({ result: false, error: "Aucun fichier reçu" });
     }
 
-    const resultCloudinary = await cloudinary.uploader.upload_large(
-      sourcePath,
-      {
-        resource_type: "auto",
-        chunk_size: 6000000,
-      },
-    );
+    if (!sourcePath || !fileSystem.existsSync(sourcePath)) {
+      return res.json({
+        result: false,
+        error: "Fichier temporaire introuvable",
+      });
+    }
+
+    const resultCloudinary = await cloudinary.uploader.upload(sourcePath, {
+      resource_type: "auto",
+      chunk_size: 6000000,
+    });
 
     if (fileSystem.existsSync(sourcePath)) {
       fileSystem.unlinkSync(sourcePath);
