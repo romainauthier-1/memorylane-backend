@@ -6,13 +6,14 @@ const cloudinary = require("cloudinary").v2;
 const fileSystem = require("fs");
 const os = require("os");
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // POST créer url du fichier envoyé
 router.post("/", async (req, res) => {
-  // console.log("POST /upload, fichier envoyé: ", req.files?.file);
-  // const extension = path.extname(req.files?.file.name);
-  // const photoPath = path.join(os.tmpdir(), `${uniqid()}${extension}`);
-  // console.log("Chemin utilisé: ", sourcePath);
-  // const resultMove = await req.files.file.mv(sourcePath);
   const sourcePath = req.files.file.tempFilePath;
 
   try {

@@ -175,4 +175,30 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// POST Ajouter médias à un souvenir
+router.post("/:id/add-media", async (req, res) => {
+  try {
+    const memory = await Memory.findById(req.params.id);
+    const newMedias = Array.isArray(req.body) ? req.body : [req.body];
+    memory.medias.push(...newMedias);
+    await memory.save();
+    res.json({ result: true, message: "Média ajouté !" });
+  } catch (err) {
+    res.json({ result: false, error: err.message });
+  }
+});
+
+// POST Supprimer médias d'un souvenir
+router.post("/:memoryId/delete-media/:mediaId", async (req, res) => {
+  try {
+    const memory = await Memory.findById(req.params.memoryId);
+    memory.medias = memory.medias.filter(
+      (media) => String(media._id) !== req.params.mediaId,
+    );
+    await memory.save();
+    res.json({ result: true, message: "Média supprimé !" });
+  } catch (err) {
+    res.json({ result: false, error: err.message });
+  }
+});
 module.exports = router;
