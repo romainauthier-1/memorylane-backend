@@ -193,15 +193,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"busboy@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "busboy@npm:1.6.0"
-  dependencies:
-    streamsearch: "npm:^1.1.0"
-  checksum: 10c0/fa7e836a2b82699b6e074393428b91ae579d4f9e21f5ac468e1b459a244341d722d2d22d10920cdd849743dbece6dca11d72de939fb75a7448825cf2babfba1f
-  languageName: node
-  linkType: hard
-
 "bytes@npm:^3.1.2, bytes@npm:~3.1.2":
   version: 3.1.2
   resolution: "bytes@npm:3.1.2"
@@ -426,15 +417,6 @@ __metadata:
   version: 3.1.3
   resolution: "exponential-backoff@npm:3.1.3"
   checksum: 10c0/77e3ae682b7b1f4972f563c6dbcd2b0d54ac679e62d5d32f3e5085feba20483cf28bd505543f520e287a56d4d55a28d7874299941faf637e779a1aa5994d1267
-  languageName: node
-  linkType: hard
-
-"express-fileupload@npm:^1.5.2":
-  version: 1.5.2
-  resolution: "express-fileupload@npm:1.5.2"
-  dependencies:
-    busboy: "npm:^1.6.0"
-  checksum: 10c0/faafc5e27f3bd3d53abbf41df1bca23be9456cd293f5c343f8f4aa04ace0f866bf104263128ea79cafb9ead8456eb9b1076bfe2f62d489c7e46c1bef64163cbb
   languageName: node
   linkType: hard
 
@@ -837,11 +819,9 @@ __metadata:
     cors: "npm:^2.8.6"
     dotenv: "npm:^17.2.3"
     express: "npm:^5.2.1"
-    express-fileupload: "npm:^1.5.2"
     mongoose: "npm:^9.1.5"
     nodemon: "npm:^3.1.11"
     uid2: "npm:^1.0.0"
-    uniqid: "npm:^5.4.0"
   languageName: unknown
   linkType: soft
 
@@ -1464,13 +1444,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"streamsearch@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "streamsearch@npm:1.1.0"
-  checksum: 10c0/fbd9aecc2621364384d157f7e59426f4bfd385e8b424b5aaa79c83a6f5a1c8fd2e4e3289e95de1eb3511cb96bb333d6281a9919fafce760e4edb35b2cd2facab
-  languageName: node
-  linkType: hard
-
 "supports-color@npm:^5.5.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -1559,13 +1532,6 @@ __metadata:
   version: 2.0.5
   resolution: "undefsafe@npm:2.0.5"
   checksum: 10c0/96c0466a5fbf395917974a921d5d4eee67bca4b30d3a31ce7e621e0228c479cf893e783a109af6e14329b52fe2f0cb4108665fad2b87b0018c0df6ac771261d5
-  languageName: node
-  linkType: hard
-
-"uniqid@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "uniqid@npm:5.4.0"
-  checksum: 10c0/ef0d7c7ae26d5d7eb632ec9a1548575c855edfa422fd1ade1ee82d7d60bddef24574a53a5ec716db887ec763e4f5dea6dae4dfc1918e2ee5fda35dc43a6c0b7a
   languageName: node
   linkType: hard
 
