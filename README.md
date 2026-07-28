@@ -53,20 +53,20 @@ Parfaite pour les applications qui veulent offrir une expérience **nostalgique 
 
 ### 👤 **Gestion des Utilisateurs**
 
-- ✅ **Inscription** (`POST /user/signup`) – Création de compte avec nom d'utilisateur et mot de passe
-- ✅ **Connexion** (`POST /user/signin`) – Authentification et réception d'un token
-- ✅ **Token d'authentification** – Système de token unique par utilisateur
-- ✅ **Rôles** – Distinction entre utilisateurs normaux et administrateurs
+-  **Inscription** (`POST /user/signup`) – Création de compte avec nom d'utilisateur et mot de passe
+-  **Connexion** (`POST /user/signin`) – Authentification et réception d'un token
+-  **Token d'authentification** – Système de token unique par utilisateur
+-  **Rôles** – Distinction entre utilisateurs normaux et administrateurs
 
 ### 📚 **Gestion des Souvenirs (Memories)**
 
-- ✅ **Création** (`POST /memories`) – Ajout d'un nouveau souvenir avec médias
-- ✅ **Lecture** (`GET /memories/all`) – Récupération de tous les souvenirs de l'utilisateur
-- ✅ **Lecture unique** (`GET /memories/:id`) – Récupération d'un souvenir spécifique
-- ✅ **Mise à jour** (`PUT /memories/:id`) – Modification complète d'un souvenir
-- ✅ **Mise à jour partielle** – Edition du titre, description ou légende des médias
-- ✅ **Suppression** (`DELETE /memories/:id`) – Suppression d'un souvenir
-- ✅ **Gestion des médias** – Ajout et suppression de médias dans un souvenir
+-  **Création** (`POST /memories`) – Ajout d'un nouveau souvenir avec médias
+-  **Lecture** (`GET /memories/all`) – Récupération de tous les souvenirs de l'utilisateur
+-  **Lecture unique** (`GET /memories/:id`) – Récupération d'un souvenir spécifique
+-  **Mise à jour** (`PUT /memories/:id`) – Modification complète d'un souvenir
+-  **Mise à jour partielle** – Edition du titre, description ou légende des médias
+-  **Suppression** (`DELETE /memories/:id`) – Suppression d'un souvenir
+-  **Gestion des médias** – Ajout et suppression de médias dans un souvenir
 
 ### 📁 **Modèle de Souvenir**
 
@@ -95,17 +95,17 @@ Parfaite pour les applications qui veulent offrir une expérience **nostalgique 
 
 ### 🖼️ **Gestion des Médias**
 
-- ✅ **Upload local** – Stockage temporaire via Multer (`/uploads`)
-- ✅ **Cloudinary Integration** – Génération de signatures pour upload direct
-- ✅ **Endpoint de signature** (`GET /uploads/cloudinary-signature`) – Sécurisation des uploads
-- ✅ **Support multi-format** – Images, vidéos, audio, texte
+-  **Upload local** – Stockage temporaire via Multer (`/uploads`)
+-  **Cloudinary Integration** – Génération de signatures pour upload direct
+-  **Endpoint de signature** (`GET /uploads/cloudinary-signature`) – Sécurisation des uploads
+-  **Support multi-format** – Images, vidéos, audio, texte
 
 ### 🔒 **Sécurité & Authentification**
 
-- ✅ **Protection des routes** – Vérification du token Bearer
-- ✅ **Hashage des mots de passe** – Utilisation de bcrypt (cost factor: 10)
-- ✅ **CORS configuré** – Autorisation des requêtes cross-origin
-- ✅ **Limite de taille** – 50MB pour les requêtes JSON et URL-encoded
+-  **Protection des routes** – Vérification du token Bearer
+-  **Hashage des mots de passe** – Utilisation de bcrypt (cost factor: 10)
+-  **CORS configuré** – Autorisation des requêtes cross-origin
+-  **Limite de taille** – 50MB pour les requêtes JSON et URL-encoded
 
 ---
 
@@ -271,7 +271,7 @@ Le projet est configuré pour être déployé sur **Vercel** avec :
 
 ## 📝 Exemples de Requêtes
 
-### ✅ Inscription d'un utilisateur
+###  Inscription d'un utilisateur
 
 ```bash
 curl -X POST http://localhost:5000/user/signup \
@@ -279,7 +279,7 @@ curl -X POST http://localhost:5000/user/signup \
   -d '{"username": "johndoe", "password": "securePassword123"}'
 ```
 
-### ✅ Connexion
+###  Connexion
 
 ```bash
 curl -X POST http://localhost:5000/user/signin \
@@ -287,14 +287,14 @@ curl -X POST http://localhost:5000/user/signin \
   -d '{"username": "johndoe", "password": "securePassword123"}'
 ```
 
-### ✅ Récupérer ses souvenirs
+###  Récupérer ses souvenirs
 
 ```bash
 curl -X GET http://localhost:5000/memories/all \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
-### ✅ Créer un souvenir
+###  Créer un souvenir
 
 ```bash
 curl -X POST http://localhost:5000/memories \
