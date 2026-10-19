@@ -1,7 +1,6 @@
 require("dotenv").config();
 var express = require("express");
 var cors = require("cors");
-const path = require("path");
 // connection mongoDB
 require("./models/connection");
 
@@ -18,7 +17,6 @@ app.get("/", (req, res) => {
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(
   cors({

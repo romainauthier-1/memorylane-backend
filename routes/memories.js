@@ -1,204 +1,154 @@
 const Memory = require("../models/memories");
-const User = require("../models/users");
+const { requireAuth, loadOwnedMemory } = require("../modules/auth");
 var express = require("express");
 var router = express.Router();
 
-// GET All - récupérer toutes les memories
+// Toutes les routes des souvenirs nécessitent un utilisateur connecté
+router.use(requireAuth);
+
+// GET All - récupérer les memories de l'utilisateur (toutes pour un admin)
 router.get("/all", async (req, res) => {
   try {
-    if (!req.headers.authorization) {
-      res.json({ result: false, message: "Petit problème..." });
-      return;
-    }
-    const token = req.headers.authorization.replace("Bearer ", "").trim();
-    const user = await User.findOne({ token });
-    if (!token) {
-      res.json({ result: false, message: "Petit problème..." });
-      return;
-    }
-
-    if (user.isAdmin) {
-      const allMemories = await Memory.find();
-      res.json({
-        result: true,
-        numberOfMemories: allMemories.length,
-        memories: allMemories,
-      });
-    } else {
-      const allMemories = await Memory.find({ user: user._id });
-      res.json({
-        result: true,
-        numberOfMemories: allMemories.length,
-        memories: allMemories,
-      });
-    }
+    const filter = req.user.isAdmin ? {} : { user: req.user._id };
+    const allMemories = await Memory.find(filter);
+    res.json({
+      result: true,
+      numberOfMemories: allMemories.length,
+      memories: allMemories,
+    });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(500).json({ result: false, error: error.message });
   }
 });
 
 // GET One - récupérer une memory
-router.get("/:id", async (req, res) => {
-  try {
-    const foundMemory = await Memory.findById(req.params.id);
-    res.json({ result: true, memory: foundMemory });
-  } catch (error) {
-    res.json({ result: false, error });
-  }
+router.get("/:id", loadOwnedMemory(), (req, res) => {
+  res.json({ result: true, memory: req.memory });
 });
 
 // POST One - ajouter une memory
 router.post("/", async (req, res) => {
   try {
-    if (!req.headers.authorization) {
-      res.json({ result: false, message: "Petit problème..." });
-      return;
-    }
-
-    const token = req.headers.authorization.replace("Bearer ", "").trim();
-    // console.log("TOKEN REÇU: ", token);
-    const user = await User.findOne({ token });
-    if (!token) {
-      res.json({ result: false, message: "Petit problème..." });
-      return;
-    }
-    if (user) {
-      const newMemory = await new Memory({ ...req.body, user: user._id });
-      newMemory.thumbnail = newMemory.medias[0].url;
-      const savedMemory = await newMemory.save();
-      res.json({ result: true, savedMemory });
-    } else {
-      res.json({ result: false, message: "Inconnu au bataillon !" });
-    }
+    const newMemory = new Memory({ ...req.body, user: req.user._id });
+    newMemory.thumbnail = newMemory.medias[0]?.url || "";
+    const savedMemory = await newMemory.save();
+    res.json({ result: true, savedMemory });
   } catch (error) {
     console.error(error.message);
-    res.json({ result: false, error: error.message });
+    res.status(400).json({ result: false, error: error.message });
   }
 });
 
 // PUT One - éditer une memory
-router.put("/:id", async (req, res) => {
+router.put("/:id", loadOwnedMemory(), async (req, res) => {
   try {
-    const updatedMemory = await Memory.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true },
-    );
+    // le propriétaire d'un souvenir ne peut pas être modifié
+    const { user, ...updates } = req.body;
+    req.memory.set(updates);
+    const updatedMemory = await req.memory.save();
     res.json({
       result: true,
       memory: updatedMemory,
       message: "Souvenir mis à jour avec succès !",
     });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(400).json({ result: false, error: error.message });
   }
 });
 
-// PUT Title - éditer une memory
-router.put("/title/:id", async (req, res) => {
-  const { id } = req.params;
-  const { newTitle } = req.body;
-
+// PUT Title - éditer le titre d'une memory
+router.put("/title/:id", loadOwnedMemory(), async (req, res) => {
   try {
-    const memory = await Memory.findById(id);
-
-    memory.title = newTitle;
-
-    const updatedMemory = await memory.save();
-
+    req.memory.title = req.body.newTitle;
+    const updatedMemory = await req.memory.save();
     res.json({
       result: true,
       memory: updatedMemory,
       message: "Titre mis à jour avec succès !",
     });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(400).json({ result: false, error: error.message });
   }
 });
 
-// PUT Description - éditer une memory
-router.put("/description/:id", async (req, res) => {
-  const { id } = req.params;
-  const { newDescription } = req.body;
-
+// PUT Description - éditer la description d'une memory
+router.put("/description/:id", loadOwnedMemory(), async (req, res) => {
   try {
-    const memory = await Memory.findById(id);
-
-    memory.description = newDescription;
-
-    const updatedMemory = await memory.save();
-
+    req.memory.description = req.body.newDescription;
+    const updatedMemory = await req.memory.save();
     res.json({
       result: true,
       memory: updatedMemory,
       message: "Description mise à jour avec succès !",
     });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(400).json({ result: false, error: error.message });
   }
 });
 
-// PUT Caption - éditer une memory
-router.put("/caption/:id", async (req, res) => {
-  const { id } = req.params;
+// PUT Caption - éditer la légende d'un média
+router.put("/caption/:id", loadOwnedMemory(), async (req, res) => {
   const { mediaNewCaption, mediaIndex } = req.body;
-
   try {
-    const memory = await Memory.findById(id);
-
-    memory.medias[mediaIndex].caption = mediaNewCaption;
-
-    const updatedMemory = await memory.save();
-
+    const media = req.memory.medias[mediaIndex];
+    if (!media) {
+      return res
+        .status(404)
+        .json({ result: false, error: "Média introuvable" });
+    }
+    media.caption = mediaNewCaption;
+    const updatedMemory = await req.memory.save();
     res.json({
       result: true,
       memory: updatedMemory,
-      message: "Légende mis à jour avec succès !",
+      message: "Légende mise à jour avec succès !",
     });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(400).json({ result: false, error: error.message });
   }
 });
 
 // DELETE One - supprimer une memory
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", loadOwnedMemory(), async (req, res) => {
   try {
-    const foundMemory = await Memory.findById(req.params.id);
-    deletedMemory = await foundMemory.deleteOne();
+    await req.memory.deleteOne();
     res.json({
       result: true,
-      deletedMemory: foundMemory,
+      deletedMemory: req.memory,
       message: "Souvenir supprimé !",
     });
   } catch (error) {
-    res.json({ result: false, error });
+    res.status(500).json({ result: false, error: error.message });
   }
 });
 
-// POST Ajouter médias à un souvenir
-router.post("/:id/add-media", async (req, res) => {
+// POST Ajouter des médias à un souvenir
+router.post("/:id/add-media", loadOwnedMemory(), async (req, res) => {
   try {
-    const memory = await Memory.findById(req.params.id);
     const newMedias = Array.isArray(req.body) ? req.body : [req.body];
-    memory.medias.push(...newMedias);
-    await memory.save();
+    req.memory.medias.push(...newMedias);
+    await req.memory.save();
     res.json({ result: true, message: "Média ajouté !" });
   } catch (err) {
-    res.json({ result: false, error: err.message });
+    res.status(400).json({ result: false, error: err.message });
   }
 });
 
-// POST Supprimer médias d'un souvenir
-router.post("/:memoryId/delete-media/:mediaId", async (req, res) => {
-  try {
-    const memory = await Memory.findById(req.params.memoryId);
-    memory.medias = memory.medias.filter(
-      (media) => String(media._id) !== req.params.mediaId,
-    );
-    await memory.save();
-    res.json({ result: true, message: "Média supprimé !" });
-  } catch (err) {
-    res.json({ result: false, error: err.message });
-  }
-});
+// DELETE Supprimer un média d'un souvenir
+router.delete(
+  "/:memoryId/media/:mediaId",
+  loadOwnedMemory("memoryId"),
+  async (req, res) => {
+    try {
+      req.memory.medias = req.memory.medias.filter(
+        (media) => String(media._id) !== req.params.mediaId,
+      );
+      await req.memory.save();
+      res.json({ result: true, message: "Média supprimé !" });
+    } catch (err) {
+      res.status(400).json({ result: false, error: err.message });
+    }
+  },
+);
+
 module.exports = router;
