@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cloudinary = require("cloudinary").v2;
+const { requireAuth } = require("../modules/auth");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,7 +10,7 @@ cloudinary.config({
 });
 
 // GET signature pour Cloudinary
-router.get("/cloudinary-signature", (req, res) => {
+router.get("/cloudinary-signature", requireAuth, (req, res) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
   const signature = cloudinary.utils.api_sign_request(
     { timestamp: timestamp },

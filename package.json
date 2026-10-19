@@ -4,8 +4,8 @@
   "description": "Pour revivre les moments passés",
   "main": "index.js",
   "author": "Romain Authier",
-  "license": "MIT",
   "private": true,
+  "packageManager": "yarn@4.9.2",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
